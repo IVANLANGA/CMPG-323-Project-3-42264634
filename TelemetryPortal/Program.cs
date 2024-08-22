@@ -5,6 +5,7 @@ using TelemetryPortal.Components;
 using TelemetryPortal.Components.Account;
 using TelemetryPortal.Data;
 using TelemetryPortal.Models;
+using TelemetryPortal.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +14,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddCascadingAuthenticationState();
+
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 
 builder.Services.AddAuthentication(options =>
     {
