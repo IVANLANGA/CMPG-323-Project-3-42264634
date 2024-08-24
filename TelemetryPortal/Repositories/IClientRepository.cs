@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TelemetryPortal.Repositories
 {
+    // Interface for Client repository, extending the generic repository for Client entity operations
     public interface IClientRepository : IGenericRepository<Client>
     {
         Task<Client> GetClientByIdAsync(Guid? id);

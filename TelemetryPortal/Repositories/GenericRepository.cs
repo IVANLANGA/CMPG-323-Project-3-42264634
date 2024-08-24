@@ -11,22 +11,26 @@ namespace TelemetryPortal.Repositories
         protected readonly TechtrendsContext _context;
         protected readonly DbSet<T> _dbSet;
 
+        //Basic constructor to connect to db
         public GenericRepository(TechtrendsContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
         }
 
+        //Implementation of get all function
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
 
+        //implementation of getting specified id function
         public async Task<T> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
 
+        //implementation of adding a new entity
         public async Task AddAsync(T entity)
         {
             if (entity == null)
@@ -36,6 +40,7 @@ namespace TelemetryPortal.Repositories
             await _context.SaveChangesAsync();
         }
 
+        //implementation of Updating an entity
         public async Task UpdateAsync(T entity)
         {
             if (entity == null)
@@ -45,6 +50,7 @@ namespace TelemetryPortal.Repositories
             await _context.SaveChangesAsync();
         }
 
+        //implementation of removing an entity function
         public async Task RemoveAsync(T entity)
         {
             _dbSet.Remove(entity);

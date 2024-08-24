@@ -5,6 +5,7 @@ using TelemetryPortal.Models;
 
 namespace TelemetryPortal.Services
 {
+    //Interface for client services
     public interface IClientService
     {
         Task AddClientAsync(Client entity);

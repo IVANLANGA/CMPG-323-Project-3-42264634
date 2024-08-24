@@ -5,6 +5,7 @@ using TelemetryPortal.Models;
 
 namespace TelemetryPortal.Services
 {
+    //Interface for Project services
     public interface IProjectService
     {
         Task AddProjectAsync(Project entity);

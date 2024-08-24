@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace TelemetryPortal.Repositories
 {
+    // Interface for Generic repository
     public interface IGenericRepository<T> where T : class
     {
         Task<IEnumerable<T>> GetAllAsync();
