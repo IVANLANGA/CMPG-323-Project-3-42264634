@@ -1,6 +1,9 @@
 ﻿@page "/details-project/{ProjectId:guid}"
 @using TelemetryPortal.Data
 @using TelemetryPortal.Models
+@using TelemetryPortal.Services
+@inject IProjectService ProjectService
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <h3>Project Details</h3>
@@ -26,23 +29,15 @@ else
 }
 
 @code {
-    [Inject]
-    TechtrendsContext DbContext { get; set; }
-    [Inject]
-    NavigationManager navigationManager { get; set; }
-
-    [Parameter]
-    public Guid ProjectId { get; set; }
-
+    [Parameter] public Guid ProjectId { get; set; }
     private Project project;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load the project details from the database
-        project = await DbContext.Projects.FindAsync(ProjectId);
+        project = await ProjectService.GetProjectByIdAsync(ProjectId);
         if (project == null)
         {
-            navigationManager.NavigateTo("/projects");
+            NavigationManager.NavigateTo("/projects");
         }
     }
 }

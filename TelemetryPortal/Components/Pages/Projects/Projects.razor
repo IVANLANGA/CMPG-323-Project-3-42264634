@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore
 @using TelemetryPortal.Data
 @using TelemetryPortal.Models
+@using TelemetryPortal.Services
 @rendermode InteractiveServer
 <PageTitle>Projects</PageTitle>
 
@@ -47,18 +48,20 @@
 
 @code {
     [Inject]
-    TechtrendsContext DbContext { get; set; }
+    IProjectService ProjectService { get; set; }
     [Inject]
-    NavigationManager navigationManager { get; set; }
+    NavigationManager NavigationManager { get; set; }
+
     private List<Project> projects;
 
     protected override async Task OnInitializedAsync()
     {
-        projects = await DbContext.Projects.ToListAsync();
+        var projectsEnumerable = await ProjectService.GetAllProjectsAsync();
+        projects = projectsEnumerable.ToList(); // Convert IEnumerable to List
     }
 
-    public async Task Create()
+    private void Create()
     {
-        navigationManager.NavigateTo("create-project");
+        NavigationManager.NavigateTo("create-project");
     }
-}
+} 

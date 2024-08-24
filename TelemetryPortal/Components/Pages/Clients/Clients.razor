@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore
 @using TelemetryPortal.Data
 @using TelemetryPortal.Models
+@using TelemetryPortal.Services
 @rendermode InteractiveServer
 
 <h3>Clients</h3>
@@ -48,19 +49,19 @@ else
 
 @code {
     [Inject]
-    TechtrendsContext DbContext { get; set; }
+    IClientService ClientService { get; set; }
     [Inject]
-    NavigationManager navigationManager { get; set; }
+    NavigationManager NavigationManager { get; set; }
 
     private List<Client> clients;
 
     protected override async Task OnInitializedAsync()
     {
-        clients = await DbContext.Clients.ToListAsync();
+        clients = (await ClientService.GetAllClientsAsync()).ToList();
     }
 
-    public async Task Create()
+    private void Create()
     {
-        navigationManager.NavigateTo("create-client");
+        NavigationManager.NavigateTo("create-client");
     }
 }

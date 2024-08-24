@@ -1,43 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using TelemetryPortal.Models;
 using TelemetryPortal.Repositories;
 
 namespace TelemetryPortal.Services
 {
-    public class ClientService: IClientService
+    public class ClientService : IClientService
     {
         private readonly IClientRepository _clientRepository;
 
-        public ClientService(IClientRepository clientRepository) 
+        public ClientService(IClientRepository clientRepository)
         {
-             _clientRepository = clientRepository;
+            _clientRepository = clientRepository;
         }
 
-        public void AddClient(Client entity)
+        public async Task AddClientAsync(Client entity)
         {
-            _clientRepository.Add(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await _clientRepository.AddClientAsync(entity);
         }
 
-        public IEnumerable<Client> GetAllClients()
+        public async Task<IEnumerable<Client>> GetAllClientsAsync()
         {
-            return _clientRepository.GetAll().ToList();
+            return await _clientRepository.GetAllClientsAsync();
         }
 
-        public Client GetClientById(Guid? id)
+        public async Task<Client> GetClientByIdAsync(Guid? id)
         {
-            return _clientRepository.GetAll().FirstOrDefault(x => x.ClientId == id);
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            return await _clientRepository.GetClientByIdAsync(id);
         }
 
-        public void RemoveClient(Client entity)
+        public async Task UpdateClientAsync(Client entity)
         {
-            _clientRepository.Remove(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await _clientRepository.UpdateClientAsync(entity);
         }
 
-        public void UpdateClient(Client entity)
+        public async Task RemoveClientAsync(Client entity)
         {
-            _clientRepository.Update(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await _clientRepository.RemoveClientAsync(entity);
         }
     }
 }

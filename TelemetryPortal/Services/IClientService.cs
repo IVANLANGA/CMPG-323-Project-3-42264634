@@ -1,16 +1,16 @@
-﻿using TelemetryPortal.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TelemetryPortal.Models;
 
 namespace TelemetryPortal.Services
 {
     public interface IClientService
     {
-        Client GetClientById(Guid? id);
-        IEnumerable<Client> GetAllClients();
-        void RemoveClient(Client entity);
-        void UpdateClient(Client entity);
-        void AddClient(Client entity);
+        Task AddClientAsync(Client entity);
+        Task<IEnumerable<Client>> GetAllClientsAsync();
+        Task<Client> GetClientByIdAsync(Guid? id);
+        Task UpdateClientAsync(Client entity);
+        Task RemoveClientAsync(Client entity);
     }
-
 }

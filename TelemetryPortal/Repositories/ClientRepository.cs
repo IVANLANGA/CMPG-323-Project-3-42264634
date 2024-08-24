@@ -1,4 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TelemetryPortal.Data;
 using TelemetryPortal.Models;
 
@@ -10,29 +14,50 @@ namespace TelemetryPortal.Repositories
         {
         }
 
-        public Client GetClientById(Guid? id)
+        // Asynchronous method to get a client by ID
+        public async Task<Client> GetClientByIdAsync(Guid? id)
         {
-            return GetAll().FirstOrDefault(x => x.ClientId == id);
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            return await GetByIdAsync(id.Value);
         }
 
-        public IEnumerable<Client> GetAllClients()
+        // Asynchronous method to get all clients
+        public async Task<IEnumerable<Client>> GetAllClientsAsync()
         {
-            return GetAll().ToList();
+            return await GetAllAsync();
         }
 
-        public void RemoveClient(Client entity)
+        // Asynchronous method to add a client
+        public async Task AddClientAsync(Client entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await AddAsync(entity);
         }
 
-        public void UpdateClient(Client entity)
+        // Asynchronous method to update a client
+        public async Task UpdateClientAsync(Client entity)
         {
-            Update(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await UpdateAsync(entity);
         }
 
-        public void AddClient(Client entity)
+        // Asynchronous method to remove a client
+        public async Task RemoveClientAsync(Client entity)
         {
-            Add(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await RemoveAsync(entity);
         }
     }
 }

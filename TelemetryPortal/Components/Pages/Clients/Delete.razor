@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore
 @using TelemetryPortal.Data
 @using TelemetryPortal.Models
+@using TelemetryPortal.Services
 @rendermode InteractiveServer
 
 <h3>Delete Client</h3>
@@ -20,9 +21,9 @@ else
 
 @code {
     [Inject]
-    TechtrendsContext DbContext { get; set; }
+    IClientService ClientService { get; set; }
     [Inject]
-    NavigationManager navigationManager { get; set; }
+    NavigationManager NavigationManager { get; set; }
 
     [Parameter]
     public Guid ClientId { get; set; }
@@ -31,10 +32,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        client = await DbContext.Clients.FindAsync(ClientId);
+        client = await ClientService.GetClientByIdAsync(ClientId);
         if (client == null)
         {
-            navigationManager.NavigateTo("/clients");
+            NavigationManager.NavigateTo("/clients");
         }
     }
 
@@ -42,9 +43,8 @@ else
     {
         if (client != null)
         {
-            DbContext.Clients.Remove(client);
-            await DbContext.SaveChangesAsync();
-            navigationManager.NavigateTo("/clients");
+            await ClientService.RemoveClientAsync(client);
+            NavigationManager.NavigateTo("/clients");
         }
     }
 }

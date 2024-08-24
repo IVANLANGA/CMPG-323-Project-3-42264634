@@ -1,6 +1,9 @@
 ﻿@page "/edit-project/{ProjectId:guid}"
 @using TelemetryPortal.Data
 @using TelemetryPortal.Models
+@using TelemetryPortal.Services
+@inject IProjectService ProjectService
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <h3>Edit Project</h3>
@@ -39,11 +42,6 @@
 </EditForm>
 
 @code {
-    [Inject]
-    TechtrendsContext DbContext { get; set; }
-    [Inject]
-    NavigationManager navigationManager { get; set; }
-
     [Parameter]
     public Guid ProjectId { get; set; }
 
@@ -67,12 +65,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Load the project details from the database
-        project = await DbContext.Projects.FindAsync(ProjectId);
+        // Load the project details using ProjectService
+        project = await ProjectService.GetProjectByIdAsync(ProjectId);
 
         if (project == null)
         {
-            navigationManager.NavigateTo("/projects");
+            NavigationManager.NavigateTo("/projects");
         }
     }
 
@@ -85,8 +83,7 @@
         Console.WriteLine($"ProjectStatus: {project.ProjectStatus}");
         Console.WriteLine($"ClientId: {project.ClientId}");
 
-        DbContext.Projects.Update(project);
-        await DbContext.SaveChangesAsync();
-        navigationManager.NavigateTo("/projects");
+        await ProjectService.UpdateProjectAsync(project);
+        NavigationManager.NavigateTo("/projects");
     }
 }

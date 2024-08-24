@@ -1,15 +1,16 @@
-﻿using TelemetryPortal.Models;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using TelemetryPortal.Repositories;
+using TelemetryPortal.Models;
 
 namespace TelemetryPortal.Repositories
 {
     public interface IProjectRepository : IGenericRepository<Project>
     {
-        Project GetProjectById(Guid? id);
-        IEnumerable<Project> GetAllProjects();
-        void RemoveProject(Project entity);
-        void UpdateProject(Project entity);
-        void AddProject(Project entity);
+        Task<Project> GetProjectByIdAsync(Guid? id);
+        Task<IEnumerable<Project>> GetAllProjectsAsync();
+        Task AddProjectAsync(Project entity);
+        Task UpdateProjectAsync(Project entity);
+        Task RemoveProjectAsync(Project entity);
     }
 }

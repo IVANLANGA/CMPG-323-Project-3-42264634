@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore
 @using TelemetryPortal.Data
 @using TelemetryPortal.Models
+@using TelemetryPortal.Services
 @rendermode InteractiveServer
 
 <h3>Create New Client</h3>
@@ -31,9 +32,9 @@
 
 @code {
     [Inject]
-    TechtrendsContext DbContext { get; set; }
+    IClientService ClientService { get; set; }
     [Inject]
-    NavigationManager navigationManager { get; set; }
+    NavigationManager NavigationManager { get; set; }
 
     private Client newClient = new Client();
 
@@ -41,11 +42,10 @@
     {
         newClient.ClientId = Guid.NewGuid();
 
-        // Add the new client to the database
-        DbContext.Clients.Add(newClient);
-        await DbContext.SaveChangesAsync();
+        // Add the new client using the service
+        await ClientService.AddClientAsync(newClient);
 
         // Redirect to the clients list page
-        navigationManager.NavigateTo("/clients");
+        NavigationManager.NavigateTo("/clients");
     }
 }

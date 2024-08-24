@@ -7,10 +7,10 @@ namespace TelemetryPortal.Repositories
 {
     public interface IClientRepository : IGenericRepository<Client>
     {
-        Client GetClientById(Guid? id);
-        IEnumerable<Client> GetAllClients();
-        void RemoveClient(Client entity);
-        void UpdateClient(Client entity);
-        void AddClient(Client entity);
+        Task<Client> GetClientByIdAsync(Guid? id);
+        Task<IEnumerable<Client>> GetAllClientsAsync();
+        Task AddClientAsync(Client entity);
+        Task UpdateClientAsync(Client entity);
+        Task RemoveClientAsync(Client entity);
     }
 }

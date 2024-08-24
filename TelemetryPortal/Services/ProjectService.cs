@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using TelemetryPortal.Models;
 using TelemetryPortal.Repositories;
 
 namespace TelemetryPortal.Services
 {
-    public class ProjectService: IProjectService
+    public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
 
@@ -15,29 +15,45 @@ namespace TelemetryPortal.Services
             _projectRepository = projectRepository;
         }
 
-        public void AddProject(Project entity)
+        public async Task AddProjectAsync(Project entity)
         {
-            _projectRepository.Add(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await _projectRepository.AddProjectAsync(entity);
         }
 
-        public IEnumerable<Project> GetAllProjects()
+        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
         {
-            return _projectRepository.GetAll().ToList();
+            return await _projectRepository.GetAllProjectsAsync();
         }
 
-        public Project GetProjectById(Guid? id)
+        public async Task<Project> GetProjectByIdAsync(Guid? id)
         {
-            return _projectRepository.GetAll().FirstOrDefault(x => x.ClientId == id);
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            return await _projectRepository.GetProjectByIdAsync(id);
         }
 
-        public void RemoveProject(Project entity)
+        public async Task UpdateProjectAsync(Project entity)
         {
-            _projectRepository.Remove(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await _projectRepository.UpdateProjectAsync(entity);
         }
 
-        public void UpdateProject(Project entity)
+        public async Task RemoveProjectAsync(Project entity)
         {
-            _projectRepository.Update(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await _projectRepository.RemoveProjectAsync(entity);
         }
     }
 }

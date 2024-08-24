@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TelemetryPortal.Data;
-using TelemetryPortal.Repositories;
 using TelemetryPortal.Data;
 
 namespace TelemetryPortal.Repositories
@@ -21,69 +17,38 @@ namespace TelemetryPortal.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            try
-            {
-                return _dbSet;
-            }
-            catch (Exception ex) 
-            { 
-                throw new Exception($"could not be retrieve entities: {ex.Message}");
-            }
+            return await _dbSet.ToListAsync();
         }
 
-        public void Add(T entity)
+        public async Task<T> GetByIdAsync(Guid id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public async Task AddAsync(T entity)
         {
             if (entity == null)
-            {
-                throw new ArgumentNullException($"{nameof(entity)} entity must not be null");
-            }
-            try
-            {
-                _context.Add(entity);
-                _context.SaveChanges();
-            }
-            catch (Exception ex) 
-            { 
-                throw new Exception($"{nameof(entity)} could not be saved: {ex.Message}");    
-            }
+                throw new ArgumentNullException(nameof(entity));
 
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             if (entity == null)
-            {
-                throw new ArgumentNullException($"{nameof(entity)} entity must not be null");
-            }
-            try
-            {
-                _context.Update(entity);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"{nameof(entity)} could not be updated: {ex.Message}");
-            }
+                throw new ArgumentNullException(nameof(entity));
+
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Remove(T entity)
+        public async Task RemoveAsync(T entity)
         {
-            try
-            {
-                _context.Remove(entity);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Coult not remove entity: {ex.Message}");
-            }
-        }
-
-        public void RemoveRange(IEnumerable<T> entities)
-        {
-            _dbSet.RemoveRange(entities);
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

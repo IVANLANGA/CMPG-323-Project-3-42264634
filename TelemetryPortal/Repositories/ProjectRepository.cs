@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TelemetryPortal.Data;
-using TelemetryPortal.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TelemetryPortal.Data;
-using TelemetryPortal.Repositories;
+using TelemetryPortal.Models;
 
 namespace TelemetryPortal.Repositories
 {
@@ -12,29 +13,51 @@ namespace TelemetryPortal.Repositories
         public ProjectRepository(TechtrendsContext context) : base(context)
         {
         }
-        public Project GetProjectById(Guid? id)
+
+        // Asynchronous method to get a project by ID
+        public async Task<Project> GetProjectByIdAsync(Guid? id)
         {
-            return GetAll().FirstOrDefault(x => x.ProjectId == id);
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            return await GetByIdAsync(id.Value);
         }
 
-        public IEnumerable<Project> GetAllProjects()
+        // Asynchronous method to get all projects
+        public async Task<IEnumerable<Project>> GetAllProjectsAsync()
         {
-            return GetAll().ToList();
+            return await GetAllAsync();
         }
 
-        public void RemoveProject(Project entity)
+        // Asynchronous method to add a project
+        public async Task AddProjectAsync(Project entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await AddAsync(entity);
         }
 
-        public void UpdateProject(Project entity)
+        // Asynchronous method to update a project
+        public async Task UpdateProjectAsync(Project entity)
         {
-            Update(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await UpdateAsync(entity);
         }
 
-        public void AddProject(Project entity)
+        // Asynchronous method to remove a project
+        public async Task RemoveProjectAsync(Project entity)
         {
-            Add(entity);
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+            await RemoveAsync(entity);
         }
     }
 }
