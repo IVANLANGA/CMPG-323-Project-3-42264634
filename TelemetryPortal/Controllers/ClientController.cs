@@ -2,28 +2,28 @@
 using System;
 using System.Threading.Tasks;
 using TelemetryPortal.Models;
-using TelemetryPortal.Services;
+using TelemetryPortal.Repositories;
 
 namespace TelemetryPortal.Controllers
 {
     public class ClientController : Controller
     {
-        private readonly ClientService _clientService;
+        private readonly ClientRepository _clientRepository;
 
-        public ClientController(ClientService clientService)
+        public ClientController(ClientRepository clientRepository)
         {
-            _clientService = clientService;
+            _clientRepository = clientRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var clients = await _clientService.GetAllClientsAsync();
+            var clients = await _clientRepository.GetAllClientsAsync();
             return View(clients);
         }
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
+            var client = await _clientRepository.GetClientByIdAsync(id);
             if (client == null)
             {
                 return NotFound();
@@ -42,7 +42,7 @@ namespace TelemetryPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _clientService.AddClientAsync(client);
+                await _clientRepository.AddClientAsync(client);
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
@@ -50,7 +50,7 @@ namespace TelemetryPortal.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
+            var client = await _clientRepository.GetClientByIdAsync(id);
             if (client == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace TelemetryPortal.Controllers
 
             if (ModelState.IsValid)
             {
-                await _clientService.UpdateClientAsync(client);
+                await _clientRepository.UpdateClientAsync(client);
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
@@ -77,7 +77,7 @@ namespace TelemetryPortal.Controllers
 
         public async Task<IActionResult> Delete(Guid id)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
+            var client = await _clientRepository.GetClientByIdAsync(id);
             if (client == null)
             {
                 return NotFound();
@@ -89,7 +89,7 @@ namespace TelemetryPortal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Client client)
         {
-            await _clientService.RemoveClientAsync(client);
+            await _clientRepository.RemoveClientAsync(client);
             return RedirectToAction(nameof(Index));
         }
     }

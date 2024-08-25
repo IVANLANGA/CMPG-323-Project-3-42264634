@@ -2,28 +2,28 @@
 using System;
 using System.Threading.Tasks;
 using TelemetryPortal.Models;
-using TelemetryPortal.Services;
+using TelemetryPortal.Repositories;
 
 namespace TelemetryPortal.Controllers
 {
     public class ProjectController : Controller
     {
-        private readonly ProjectService _projectService;
+        private readonly ProjectRepository _projectRepository;
 
-        public ProjectController(ProjectService projectService)
+        public ProjectController(ProjectRepository projectRepository)
         {
-            _projectService = projectService;
+            _projectRepository = projectRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var projects = await _projectService.GetAllProjectsAsync();
+            var projects = await _projectRepository.GetAllProjectsAsync();
             return View(projects);
         }
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var project = await _projectService.GetProjectByIdAsync(id);
+            var project = await _projectRepository.GetProjectByIdAsync(id);
             if (project == null)
             {
                 return NotFound();
@@ -42,7 +42,7 @@ namespace TelemetryPortal.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _projectService.AddProjectAsync(project);
+                await _projectRepository.AddProjectAsync(project);
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
@@ -50,7 +50,7 @@ namespace TelemetryPortal.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            var project = await _projectService.GetProjectByIdAsync(id);
+            var project = await _projectRepository.GetProjectByIdAsync(id);
             if (project == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace TelemetryPortal.Controllers
 
             if (ModelState.IsValid)
             {
-                await _projectService.UpdateProjectAsync(project);
+                await _projectRepository.UpdateProjectAsync(project);
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
@@ -77,7 +77,7 @@ namespace TelemetryPortal.Controllers
 
         public async Task<IActionResult> Delete(Guid id)
         {
-            var project = await _projectService.GetProjectByIdAsync(id);
+            var project = await _projectRepository.GetProjectByIdAsync(id);
             if (project == null)
             {
                 return NotFound();
@@ -89,7 +89,7 @@ namespace TelemetryPortal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Project project)
         {
-            await _projectService.RemoveProjectAsync(project);
+            await _projectRepository.RemoveProjectAsync(project);
             return RedirectToAction(nameof(Index));
         }
     }
